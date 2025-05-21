@@ -30,7 +30,7 @@ size_canvas_y = step_y * s_y
 menu_x = 250
 
 
-
+# -----------функции будут тут----------------
 # пропишем функцию при закрытия окна
 def on_closing():
 	# чтобы передать наружу значение 
@@ -40,30 +40,6 @@ def on_closing():
 		app_running = False
 		tk.destroy()
 
-# пропишем (обработчик событий) что будем делать на момент 
-# закрытия окна, запустим нашу функцию on_closing
-tk.protocol("WM_DELETE_WINDOW", on_closing)
-
-# определим параметры нашего окна
-# название окна
-tk.title("Игра Морской Бой")
-# пропишем чтобы размер окна нельзя было менять
-tk.resizable(0,0)
-# зададим атрибут, что наше окно должно быть поверх всех окон
-tk.wm_attributes("-topmost", 1)
-
-
-# создадим canvas для нашего приложения, а также 
-# меню для отладки и кнопок 
-canvas = Canvas(tk, width = size_canvas_x + menu_x, height = size_canvas_y, bd = 0, highlightthickness = 0)
-# на канвасе создадим прямоугольник белого цвета
-canvas.create_rectangle(0,0, size_canvas_x, size_canvas_y, fill = '#B8F5F7')
-# запакуем наш канвас
-canvas.pack()
-# и обновим tk
-tk.update()
-
-# -----------функции будут тут----------------
 # ф для прорисовки клеток в нашем поле
 def draw_table():
 	# нарисуем вертикальные линии
@@ -82,7 +58,56 @@ def button_show_enemy():
 def button_begin_again():
 	pass
 
+# ф при нажатии на кнопки мыши
+def add_to_all(event):
+	# введем переменную
+	# при нажатии ЛКМ будет 0
+	_type = 0
+	if event.num == 3:
+		# при нажатии ПКМ будет 1 
+		_type = 1 
+	# выведем значение на консоль
+	#print(_type)
+	# выведем координаты курсора относително нашего окна
+	mouse_x = canvas.winfo_pointerx() - canvas.winfo_rootx()
+	mouse_y = canvas.winfo_pointery() - canvas.winfo_rooty()
+	#print(mouse_x, mouse_y)
+	# определим точные значения x и y наших ячеек при нажатии
+	ip_x = mouse_x // step_x
+	ip_y = mouse_y // step_y
+	#print(ip_x, ip_y)
+	print(ip_x, ip_y, "_type: ", _type)
+
+
 #---------------------------------------------
+
+
+
+
+# пропишем (обработчик событий) что будем делать на момент 
+# закрытия окна, запустим нашу функцию on_closing
+tk.protocol("WM_DELETE_WINDOW", on_closing)
+
+# определим параметры нашего окна
+# название окна
+tk.title("Игра Морской Бой")
+# пропишем чтобы размер окна нельзя было менять
+tk.resizable(0,0)
+# зададим атрибут, что наше окно должно быть поверх всех окон
+tk.wm_attributes("-topmost", 1)
+
+
+# создадим canvas для нашего приложения, а также 
+# меню для отладки и кнопок 
+canvas = Canvas(tk, width = size_canvas_x + menu_x, height = size_canvas_y, bd = 0, highlightthickness = 0)
+# на канвасе создадим прямоугольник голубоватого цвета
+canvas.create_rectangle(0,0, size_canvas_x, size_canvas_y, fill = '#B8F5F7')
+# запакуем наш канвас
+canvas.pack()
+# и обновим tk
+tk.update()
+
+
 
 
 # вызовем функцию чтобы нарисовать клетки
@@ -94,6 +119,14 @@ b0 = Button(tk, text = 'Показать корабли противника', c
 b0.place(x = size_canvas_x + 20, y = 30)
 b1 = Button(tk, text = 'Начать заново!', command = button_begin_again)
 b1.place(x = size_canvas_x +20, y = 70)
+
+
+# отследим нажатие кнопок мыщи
+# ЛКМ
+canvas.bind_all("<Button-1>", add_to_all)
+# ПКМ
+canvas.bind_all("<Button-3>", add_to_all)
+
 
 
 
